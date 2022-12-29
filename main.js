@@ -19,14 +19,10 @@ camera.position.setZ(30);
 const bgcolor = new THREE.Color('black');
 scene.background = bgcolor;
 
-renderer.render(scene, camera);
-
 const torus = new THREE.Mesh(
 	new THREE.TorusGeometry(10, 3, 16, 100),
 	new THREE.MeshBasicMaterial({color: 0x752010, wireframe: true})
 );
-torus.geometry.translate(0, 0, 1);
-
 
 scene.add(torus);
 
@@ -44,29 +40,17 @@ function onMouseMove(event) {
 	torus.lookAt(pointOfIntersection);
 };
 
-renderer.setAnimationLoop(() => {
-	if (resize(renderer)) {
-		camera.aspect = canvas.clientWidth / canvas.clientHeight;
-		camera.updateProjectionMatrix();
-	}
-
-	renderer.render(scene, camera);
-});
-
-function resize(renderer) {
-	const canvas = renderer.domElement;
-	const width = canvas.clientWidth;
-	const height = canvas.clientHeight;
-	const needResize = canvas.width !== width || canvas.height !== height;
-	if (needResize) {
-	  renderer.setSize(width, height, false);
-	}
-	return needResize;
+window.addEventListener('resize', onWindowResize, false)
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.render(scene, camera);
 }
-/* //OTHER WAY OF RENDERING
+
 function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
 
-animate();*/
+animate();
